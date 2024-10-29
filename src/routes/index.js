@@ -3,6 +3,8 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const crypto = require('crypto');
+const UsuariosController = require('../controller/UsuariosController');
+
 
 
 
@@ -18,6 +20,8 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage});
+
+router.get('/user', UsuariosController.listar)
 
 
 
