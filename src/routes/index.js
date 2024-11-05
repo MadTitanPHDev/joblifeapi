@@ -4,6 +4,7 @@ const multer = require('multer');
 const router = express.Router();
 const crypto = require('crypto');
 const UsuariosController = require('../controller/UsuariosController');
+const CategoriaController = require('../controller/CategoriasController');
 
 
 
@@ -28,6 +29,11 @@ router.delete('/users/:id', UsuariosController.deletar);
 router.get('/users/:id', UsuariosController.listarUsuario)
 
 router.post('/login', UsuariosController.login);
+
+router.get('/categorias', CategoriaController.listar);
+router.post('/categorias', CategoriaController.criar);
+router.put('/categorias/:id', CategoriaController.alterar);
+router.delete('/categorias/:id', CategoriaController.deletar);
 
 
 
