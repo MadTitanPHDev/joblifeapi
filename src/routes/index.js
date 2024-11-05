@@ -1,9 +1,9 @@
-
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const crypto = require('crypto');
-
+const UsuariosController = require('../controller/UsuariosController');
+const ProfissionaisController = require('../controller/ProfissionaisController');
 
 
 const storage = multer.diskStorage({
@@ -19,6 +19,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
+router.get('/users', UsuariosController.listar);
+router.post('/users', UsuariosController.criar);
+router.put('/users/:id', UsuariosController.alterar);
+router.delete('/users/:id', UsuariosController.deletar);
+router.get('/users/:id', UsuariosController.listarUsuario)
 
+router.post('/login', UsuariosController.login);
+
+router.post('/profissionais', ProfissionaisController.criar);
+router.get('/profissionais', ProfissionaisController.listar);
+router.put('/profissionais/:id', ProfissionaisController.alterar);
+router.delete('/profissionais/:id', ProfissionaisController.deletar);
+router.get('/profissionais/:id', ProfissionaisController.listarProfissional);
 
 module.exports = router;
