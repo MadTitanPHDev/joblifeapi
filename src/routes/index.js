@@ -5,6 +5,7 @@ const router = express.Router();
 const crypto = require('crypto');
 const UsuariosController = require('../controller/UsuariosController');
 const CategoriaController = require('../controller/CategoriasController');
+const FavoritosController = require('../controller/FavoritosController');
 
 
 
@@ -35,6 +36,10 @@ router.post('/categorias', CategoriaController.criar);
 router.put('/categorias/:id', CategoriaController.alterar);
 router.delete('/categorias/:id', CategoriaController.deletar);
 
+
+router.post('/favoritos', FavoritosController.criar);
+router.get('/favoritos', FavoritosController.listar);
+router.delete('/favoritos/:id', FavoritosController.deletar);
 
 
 module.exports = router;
