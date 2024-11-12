@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const ProfissionaisController = {
     async criar(req, res) {
-        const { descricao, localizacao, preco, areas_atuacao, id_usuario } = req.body;
+        const { id_usuario, descricao, localizacao, preco, areas_atuacao} = req.body;
         const data_criacao = new Date(); // Definindo a data de criação no servidor
 
         // URL da imagem como um array JSON
@@ -14,8 +14,8 @@ const ProfissionaisController = {
         }
         const fotos = JSON.stringify([imgUrl]); // Array JSON de URLs para coluna fotos
 
-        const sql = `INSERT INTO profissionais (descricao, fotos, localizacao, preco, areas_atuacao, data_criacao, id_usuario) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-        const [result] = await pool.query(sql, [descricao, fotos, localizacao, preco, areas_atuacao, data_criacao, id_usuario]);
+        const sql = `INSERT INTO profissionais (id_usuario, descricao, fotos, localizacao, preco, areas_atuacao, data_criacao) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        const [result] = await pool.query(sql, [id_usuario, descricao, fotos, localizacao, preco, areas_atuacao, data_criacao]);
 
         const insertId = result.insertId;
         if (!insertId) {
