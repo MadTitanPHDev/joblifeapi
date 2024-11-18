@@ -103,7 +103,8 @@ const UsuariosController = {
        
         delete rows[0]?.senha;
 
-        return res.status(201).json(rows[0])
+        // return res.status(201).json(rows[0])
+        return res.status(201).json({message: "Logado com sucesso!"})
     }
 }
 
