@@ -5,6 +5,9 @@ const crypto = require('crypto');
 const UsuariosController = require('../controller/UsuariosController');
 const ProfissionaisController = require('../controller/ProfissionaisController');
 const ServicosController = require('../controller/ServicosController');
+const CategoriaController = require('../controller/CategoriasController');
+const FavoritosController = require('../controller/FavoritosController');
+
 
 
 const storage = multer.diskStorage({
@@ -21,18 +24,31 @@ const storage = multer.diskStorage({
 const upload = multer({storage});
 
 router.get('/users', UsuariosController.listar);
-router.post('/users', UsuariosController.criar);
-router.put('/users/:id', UsuariosController.alterar);
-router.delete('/users/:id', UsuariosController.deletar);
-router.get('/users/:id', UsuariosController.listarUsuario);
 
-router.post('/login', UsuariosController.login);
 
 router.post('/profissionais', ProfissionaisController.criar);
 router.get('/profissionais', ProfissionaisController.listar);
 router.put('/profissionais/:id', ProfissionaisController.alterar);
 router.delete('/profissionais/:id', ProfissionaisController.deletar);
 router.get('/profissionais/:id', ProfissionaisController.listarProfissional);
+=======
+router.post('/users', UsuariosController.criar);;
+router.put('/users/:id', UsuariosController.alterar);
+router.delete('/users/:id', UsuariosController.deletar);
+router.get('/users/:id', UsuariosController.listarUsuario)
+
+router.post('/login', UsuariosController.login);
+
+router.get('/categorias', CategoriaController.listar);
+router.post('/categorias', CategoriaController.criar);
+router.put('/categorias/:id', CategoriaController.alterar);
+router.delete('/categorias/:id', CategoriaController.deletar);
+
+
+router.post('/favoritos', FavoritosController.criar);
+router.get('/favoritos', FavoritosController.listar);
+router.delete('/favoritos/:id', FavoritosController.deletar);
+
 
 router.post('/servicos', ServicosController.criar);
 router.get('/servicos', ServicosController.listar);
