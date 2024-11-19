@@ -31,7 +31,7 @@ router.get('/profissionais', ProfissionaisController.listar);
 router.put('/profissionais/:id', ProfissionaisController.alterar);
 router.delete('/profissionais/:id', ProfissionaisController.deletar);
 router.get('/profissionais/:id', ProfissionaisController.listarProfissional);
-=======
+
 router.post('/users', UsuariosController.criar);;
 router.put('/users/:id', UsuariosController.alterar);
 router.delete('/users/:id', UsuariosController.deletar);
