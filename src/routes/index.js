@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const UsuariosController = require('../controller/UsuariosController');
 const CategoriaController = require('../controller/CategoriasController');
 const FavoritosController = require('../controller/FavoritosController');
+const authenticateJWT = require('../middleware/auth');
 
 
 
@@ -23,23 +24,23 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
-router.get('/users', UsuariosController.listar);
+router.get('/users', authenticateJWT, UsuariosController.listar);
 router.post('/users', UsuariosController.criar);;
-router.put('/users/:id', UsuariosController.alterar);
-router.delete('/users/:id', UsuariosController.deletar);
-router.get('/users/:id', UsuariosController.listarUsuario)
+router.put('/users/:id', authenticateJWT,  UsuariosController.alterar);
+router.delete('/users/:id', authenticateJWT,  UsuariosController.deletar);
+router.get('/users/:id', authenticateJWT,  UsuariosController.listarUsuario)
 
 router.post('/login', UsuariosController.login);
 
 router.get('/categorias', CategoriaController.listar);
-router.post('/categorias', CategoriaController.criar);
-router.put('/categorias/:id', CategoriaController.alterar);
-router.delete('/categorias/:id', CategoriaController.deletar);
+router.post('/categorias', authenticateJWT,  CategoriaController.criar);
+router.put('/categorias/:id', authenticateJWT,  CategoriaController.alterar);
+router.delete('/categorias/:id', authenticateJWT,  CategoriaController.deletar);
 
 
-router.post('/favoritos', FavoritosController.criar);
-router.get('/favoritos', FavoritosController.listar);
-router.delete('/favoritos/:id', FavoritosController.deletar);
+router.post('/favoritos', authenticateJWT,  FavoritosController.criar);
+router.get('/favoritos', authenticateJWT,  FavoritosController.listar);
+router.delete('/favoritos/:id', authenticateJWT,  FavoritosController.deletar);
 
 
 module.exports = router;

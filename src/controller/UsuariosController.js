@@ -1,8 +1,16 @@
 let Users = require('../model/Usuarios');
 const pool = require('../database/mysql');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
 
-
+const generateToken = (user) => {
+    const payload = {
+        id_usuario: user.id_usuario
+    };
+    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '24h'} )
+}
 const UsuariosController = {
     async criar(req, res) {
         const { nome, email, senha, tipo_usuario, telefone } = req.body;
@@ -32,10 +40,11 @@ const UsuariosController = {
     },
 
     async listar(req, res) {
-        let sql = 'SELECT * FROM usuarios';
-        const [rows] = await pool.query(sql);
+        console.log(req.userId)
+        let sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
+        const [rows] = await pool.query(sql, [req.userId])
 
-        return res.status(200).json(rows);
+        return res.status(201).json(rows);
     },
 
     async listarUsuario(req, res) {
@@ -91,7 +100,6 @@ const UsuariosController = {
         if(!rows?.length)
             return res.status(401).json({message: "Email ou senha incorretos!"})
 
-        console.log(rows[0?.senha])
 
         const isPasswordValid = await bcrypt.compare(String(senha), String(rows[0]?.senha))
         console.log(isPasswordValid)
@@ -99,11 +107,17 @@ const UsuariosController = {
         {
             return res.status(401).json({message: "Senha incorreta!"})
         } 
-
-       
         delete rows[0]?.senha;
+        let user = rows[0]
+        console.log(user.id_usuario)
+        const token = generateToken(user)
+        user = {
+            ...user,
+            token
+        }
+        // return res.status(201).json(rows[0])
+        return res.status(201).json({user, message: "Logado com sucesso!"})
 
-        return res.status(201).json(rows[0])
     }
 }
 
