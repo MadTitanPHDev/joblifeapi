@@ -13,7 +13,7 @@ const generateToken = (user) => {
 }
 const UsuariosController = {
     async criar(req, res) {
-        const { nome, email, senha, tipo_usuario, telefone} = req.body;
+        const { nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
 
         //verificacao do email se existe
         const sql_Select_existe = `SELECT * FROM Usuarios WHERE email = ?`
@@ -33,7 +33,7 @@ const UsuariosController = {
         console.log(hashSenha)
         let sql = `INSERT INTO Usuarios (nome, email, senha, tipo_usuario, telefone, foto_usuario) VALUES (?, ?, ?, ?, ?, ?)`
 
-        const result = await pool.query(sql, [nome, email, hashSenha, tipo_usuario, telefone, imgUrl])
+        const result = await pool.query(sql, [nome, email, hashSenha, tipo_usuario, telefone, foto_usuario, imgUrl])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({ message: 'Erro ao criar usuario' })
@@ -64,7 +64,7 @@ const UsuariosController = {
         console.log(req.params)
         const paramId = req.params.id;
 
-        const {nome, senha, tipo_usuario, telefone} = req.body;
+        const {nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
 
         let imgUrl = 'http://localhost:3333/images';
         if(req.file){
@@ -72,8 +72,8 @@ const UsuariosController = {
         }
 
 
-        let sql = "UPDATE Usuarios SET nome = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
-        const result = await pool.query(sql, [nome, senha, tipo_usuario, telefone, imgUrl,  Number(paramId)])
+        let sql = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
+        const result = await pool.query(sql, [nome, email, senha, tipo_usuario, telefone, foto_usuario, imgUrl,  Number(paramId)])
         console.log(result)
         const changedRows = result[0]?.affectedRows;
         if(!changedRows){

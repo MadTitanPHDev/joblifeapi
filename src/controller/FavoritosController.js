@@ -4,10 +4,10 @@ const { json } = require('express');
 
 const FavoritosController = {
     async criar(req, res) {
-        const { id_cliente, id_profissional } = req.body;
+        const { id_favorito, id_usuario } = req.body;
 
-        let sql = `INSERT INTO favoritos (id_cliente, id_profissional) VALUES (?,?)`
-        const result = await pool.query(sql, [id_cliente, id_profissional])
+        let sql = `INSERT INTO favoritos (id_favorito, id_usuario) VALUES (?,?)`
+        const result = await pool.query(sql, [id_favorito, id_usuario])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({message: 'error ao criar favorito'})
