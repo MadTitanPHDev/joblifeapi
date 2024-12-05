@@ -1,3 +1,4 @@
+let categorias = require('../model/Categorias');
 let pool = require('../database/mysql')
 
 const CategoriaController = {
