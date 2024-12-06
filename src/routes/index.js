@@ -1,16 +1,19 @@
-
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const crypto = require('crypto');
 const authenticateJWT = require('../middleware/auth');
 const UsuariosController = require('../controller/UsuariosController');
+const ProfissionaisController = require('../controller/ProfissionaisController');
+const ServicosController = require('../controller/ServicosController');
 const CategoriaController = require('../controller/CategoriasController');
 const FavoritosController = require('../controller/FavoritosController');
+
 const ServicosPrestadosController = require('../controller/ServicosPrestadosController');
 const FeedbacksController = require('../controller/FeedbacksController');
 const CatalogoServicosController = require('../controller/CatalogoServicosController');
 const CatalogoServicos_ItensController = require('../controller/CatalogoServicos_ItensController');
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -25,7 +28,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage});
 
+
 router.get('/users', authenticateJWT, UsuariosController.listar);
+
 router.post('/users', UsuariosController.criar);;
 router.put('/users/:id', authenticateJWT,  UsuariosController.alterar);
 router.delete('/users/:id', authenticateJWT,  UsuariosController.deletar);
@@ -60,5 +65,11 @@ router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController
 router.get('/catalogoServicos', CatalogoServicos_ItensController.listar);
 router.delete('/catalogoServicos/:id', authenticateJWT,  CatalogoServicos_ItensController.deletar);
 router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicos_ItensController.listarCatalogoServicos)
+
+router.post('/servicos', ServicosController.criar);
+router.get('/servicos', ServicosController.listar);
+router.put('/servicos/:id', ServicosController.alterar);
+router.delete('/servicos/:id', ServicosController.deletar);
+router.get('/servicos/:id', ServicosController.listarServicos);
 
 module.exports = router;
