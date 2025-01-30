@@ -1,6 +1,7 @@
 let Users = require('../model/Usuarios');
 const pool = require('../database/mysql');
 const bcrypt = require('bcrypt');
+
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -11,6 +12,7 @@ const generateToken = (user) => {
     };
     return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '24h'} )
 }
+
 const UsuariosController = {
     async criar(req, res) {
         const { nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
