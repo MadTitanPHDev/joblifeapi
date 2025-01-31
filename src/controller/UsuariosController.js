@@ -18,7 +18,7 @@ const UsuariosController = {
         const { nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
 
         //verificacao do email se existe
-        const sql_Select_existe = `SELECT * FROM Usuarios WHERE email = ?`
+        const sql_Select_existe = `SELECT * FROM usuarios WHERE email = ?`
         const [result_existe] = await pool.query(sql_Select_existe, [email])
         console.log([result_existe])
         if (result_existe[0]) {
@@ -33,14 +33,14 @@ const UsuariosController = {
         const salt = await bcrypt.genSalt(10);
         const hashSenha = await bcrypt.hash(String(senha), salt)
         console.log(hashSenha)
-        let sql = `INSERT INTO Usuarios (nome, email, senha, tipo_usuario, telefone, foto_usuario) VALUES (?, ?, ?, ?, ?, ?)`
+        let sql = `INSERT INTO usuarios (nome, email, senha, tipo_usuario, telefone, foto_usuario) VALUES (?, ?, ?, ?, ?, ?)`
 
         const result = await pool.query(sql, [nome, email, hashSenha, tipo_usuario, telefone, foto_usuario, imgUrl])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({ message: 'Erro ao criar usuario' })
         }
-        const sql_select = `SELECT id_usuario, email FROM Usuarios WHERE id_usuario = ?`
+        const sql_select = `SELECT id_usuario, email FROM usuarios WHERE id_usuario = ?`
         const [rows] = await pool.query(sql_select, [insertId])
         return res.status(201).json(rows[0])
 
@@ -48,7 +48,7 @@ const UsuariosController = {
 
     async listar(req, res) {
         console.log(req.userId)
-        let sql = "SELECT * FROM Usuarios WHERE id_usuario = ?";
+        let sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
         const [rows] = await pool.query(sql, [req.userId])
 
         return res.status(201).json(rows);
@@ -56,7 +56,7 @@ const UsuariosController = {
 
     async listarUsuario(req, res) {
         const paramId = req.params.id;
-        let sql = "SELECT * FROM Usuarios WHERE id_usuario = ?";
+        let sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
         const [rows] = await pool.query(sql, [paramId])
 
         return res.status(201).json(rows);
@@ -74,7 +74,7 @@ const UsuariosController = {
         }
 
 
-        let sql = "UPDATE Usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
+        let sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
         const result = await pool.query(sql, [nome, email, senha, tipo_usuario, telefone, foto_usuario, imgUrl,  Number(paramId)])
         console.log(result)
         const changedRows = result[0]?.affectedRows;
@@ -82,7 +82,7 @@ const UsuariosController = {
             return res.status(401).json({message: 'Erro ao alterar usuario.'})
         }
 
-        const sql_select = 'SELECT * FROM Usuarios WHERE id_usuario = ?'
+        const sql_select = 'SELECT * FROM usuarios WHERE id_usuario = ?'
         const [rows] = await pool.query(sql_select, [paramId])
 
         return res.status(201).json(rows[0]);
@@ -90,7 +90,7 @@ const UsuariosController = {
 
     async deletar(req, res){
         const paramId = req.params.id;
-        let sql = `DELETE FROM Usuarios WHERE id_usuario = ?`
+        let sql = `DELETE FROM usuarios WHERE id_usuario = ?`
         const result = await pool.query(sql, [Number(paramId)])
         const affectedRows = result[0]?.affectedRows;
         if(!affectedRows)
@@ -124,7 +124,7 @@ const UsuariosController = {
         const {email, senha} = req.body;
         console.log(senha)
 
-        const sql_select = `SELECT * FROM Usuarios WHERE email = ?`
+        const sql_select = `SELECT * FROM usuarios WHERE email = ?`
 
         const [rows] = await pool.query(sql_select, [email])
         console.log(rows)
