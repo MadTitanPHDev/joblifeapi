@@ -3,6 +3,7 @@ const multer = require('multer');
 const router = express.Router();
 const crypto = require('crypto');
 const authenticateJWT = require('../middleware/auth');
+
 const UsuariosController = require('../controller/UsuariosController');
 const ProfissionaisController = require('../controller/ProfissionaisController');
 const ServicosController = require('../controller/ServicosController');
@@ -31,10 +32,10 @@ const upload = multer({storage});
 
 router.get('/users', authenticateJWT, UsuariosController.listar);
 
-router.post('/users', UsuariosController.criar);;
-router.put('/users/:id', authenticateJWT,  UsuariosController.alterar);
+router.post('/users', upload.single('imagem'), UsuariosController.criar);
+router.put('/users/:id', authenticateJWT, upload.single('imagem'), UsuariosController.alterar);
 router.delete('/users/:id', authenticateJWT,  UsuariosController.deletar);
-router.get('/users/:id', authenticateJWT,  UsuariosController.listarUsuario)
+router.get('/users/:id', authenticateJWT,  UsuariosController.listarUsuario);
 
 router.post('/login', UsuariosController.login);
 
