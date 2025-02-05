@@ -105,6 +105,26 @@ const UsuariosController = {
         return res.status(200).json({ message: "Usuario deletado com sucesso." })
     },
 
+
+
+
+    // async login(req, res) {
+    //     const { email, senha } = req.body;
+    //     const sql_select = `SELECT * FROM Usuarios WHERE email = ?`;
+    //     const [rows] = await pool.query(sql_select, [email]);
+    //     if (!rows?.length) {
+    //       return res.status(401).json({ message: "Email ou senha incorretos!" });
+    //     }
+    //     const isPasswordValid = await bcrypt.compare(String(senha), String(rows[0]?.senha));
+    //     if (!isPasswordValid) {
+    //       return res.status(401).json({ message: "Senha incorreta!" });
+    //     }
+    //     return res.status(200).json({ authenticated: true });
+    //   }
+
+
+    //   alternar para token depois de pronto o login
+
     async login(req, res) {
         const { email, senha } = req.body;
         console.log(senha)
