@@ -10,24 +10,26 @@ const generateToken = (user) => {
     const payload = {
         id_usuario: user.id_usuario
     };
-    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '24h'} )
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' })
 }
 
 const UsuariosController = {
     async criar(req, res) {
-        const { nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
-
+        // console.log(req.file)
+        const { nome, email, senha,  telefone, foto_usuario } = req.body;
+        const tipo_usuario = 'cliente';
         //verificacao do email se existe
         const sql_Select_existe = `SELECT * FROM usuarios WHERE email = ?`
         const [result_existe] = await pool.query(sql_Select_existe, [email])
-        console.log([result_existe])
+        // console.log([result_existe])
         if (result_existe[0]) {
             return res.status(401).json({ message: 'Erro a criar usuario, email ja cadastrado.' })
         }
 
-        let imgUrl = 'http://localhost:3333/images';
-        if(req.file){
-            imgUrl = imgUrl + `${req.file.filename}`
+       let imgUrl = '';
+        if (req.file) {
+            console.log(req.file.filename)
+             imgUrl = `${req.file.filename}`
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -35,7 +37,7 @@ const UsuariosController = {
         console.log(hashSenha)
         let sql = `INSERT INTO usuarios (nome, email, senha, tipo_usuario, telefone, foto_usuario) VALUES (?, ?, ?, ?, ?, ?)`
 
-        const result = await pool.query(sql, [nome, email, hashSenha, tipo_usuario, telefone, foto_usuario, imgUrl])
+        const result = await pool.query(sql, [nome, email, hashSenha, tipo_usuario, telefone, foto_usuario])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({ message: 'Erro ao criar usuario' })
@@ -66,20 +68,24 @@ const UsuariosController = {
         console.log(req.params)
         const paramId = req.params.id;
 
-        const {nome, email, senha, tipo_usuario, telefone, foto_usuario} = req.body;
+        const { nome, email, senha, tipo_usuario, telefone, foto_usuario } = req.body;
 
         let imgUrl = 'http://localhost:3333/images';
-        if(req.file){
+        if (req.file) {
             imgUrl = imgUrl + `${req.file.filename}`
         }
 
 
         let sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
-        const result = await pool.query(sql, [nome, email, senha, tipo_usuario, telefone, foto_usuario, imgUrl,  Number(paramId)])
+        const result = await pool.query(sql, [nome, email, senha, tipo_usuario, telefone, foto_usuario, imgUrl, Number(paramId)])
+
+        // let sql = "UPDATE usuarios SET nome = ?, email = ?, senha = ?, tipo_usuario = ?, telefone = ?, foto_usuario = ? WHERE id_usuario = ?"
+        // const result = await pool.query(sql, [nome, email, senha, tipo_usuario, telefone, foto_usuario, Number(paramId)])
+
         console.log(result)
         const changedRows = result[0]?.affectedRows;
-        if(!changedRows){
-            return res.status(401).json({message: 'Erro ao alterar usuario.'})
+        if (!changedRows) {
+            return res.status(401).json({ message: 'Erro ao alterar usuario.' })
         }
 
         const sql_select = 'SELECT * FROM usuarios WHERE id_usuario = ?'
@@ -88,16 +94,15 @@ const UsuariosController = {
         return res.status(201).json(rows[0]);
     },
 
-    async deletar(req, res){
+    async deletar(req, res) {
         const paramId = req.params.id;
         let sql = `DELETE FROM usuarios WHERE id_usuario = ?`
         const result = await pool.query(sql, [Number(paramId)])
         const affectedRows = result[0]?.affectedRows;
-        if(!affectedRows)
-        {
-            return res.status(401).json({message: "Erro ao deletar usuario."})
+        if (!affectedRows) {
+            return res.status(401).json({ message: "Erro ao deletar usuario." })
         }
-        return res.status(200).json({message: "Usuario deletado com sucesso."})
+        return res.status(200).json({ message: "Usuario deletado com sucesso." })
     },
 
 
@@ -121,7 +126,7 @@ const UsuariosController = {
     //   alternar para token depois de pronto o login
 
     async login(req, res) {
-        const {email, senha} = req.body;
+        const { email, senha } = req.body;
         console.log(senha)
 
         const sql_select = `SELECT * FROM usuarios WHERE email = ?`
@@ -129,16 +134,15 @@ const UsuariosController = {
         const [rows] = await pool.query(sql_select, [email])
         console.log(rows)
 
-        if(!rows?.length)
-            return res.status(401).json({message: "Email ou senha incorretos!"})
+        if (!rows?.length)
+            return res.status(401).json({ message: "Email ou senha incorretos!" })
 
 
         const isPasswordValid = await bcrypt.compare(String(senha), String(rows[0]?.senha))
         console.log(isPasswordValid)
-        if(!isPasswordValid)
-        {
-            return res.status(401).json({message: "Senha incorreta!"})
-        } 
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Senha incorreta!" })
+        }
         delete rows[0]?.senha;
         let user = rows[0]
         console.log(user.id_usuario)
@@ -148,7 +152,7 @@ const UsuariosController = {
             token
         }
         // return res.status(201).json(rows[0])
-        return res.status(201).json({user, message: "Logado com sucesso!"})
+        return res.status(201).json({ user, message: "Logado com sucesso!" })
 
     }
 }
