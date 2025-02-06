@@ -4,10 +4,10 @@ const pool = require('../database/mysql');
 const ServicosController = {
     async criar(req, res) {
         try {
-            const { id_profissional, nome_servico, descricao_servico, preco_min, preco_max, categoria } = req.body;
+            const { id_profissional, nome_servico, descricao_servico, preco_min, categoria } = req.body;
 
-            const sql = `INSERT INTO servicos (id_profissional, nome_servico, descricao_servico, preco_min, preco_max, categoria) VALUES (?, ?, ?, ?, ?, ?)`;
-            const result = await pool.query(sql, [id_profissional, nome_servico, descricao_servico, preco_min, preco_max, categoria]);
+            const sql = `INSERT INTO servicos (id_profissional, nome_servico, descricao_servico, preco_min, categoria) VALUES (?, ?, ?, ?, ?)`;
+            const result = await pool.query(sql, [id_profissional, nome_servico, descricao_servico, preco_min, categoria]);
 
             const insertId = result[0]?.insertId;
             if (!insertId) {
@@ -56,10 +56,10 @@ const ServicosController = {
     async alterar(req, res) {
         try {
             const paramId = req.params.id;
-            const { id_profissional, nome_servico, descricao_servico, preco_min, preco_max, categoria } = req.body;
+            const { id_profissional, nome_servico, descricao_servico, preco_min, categoria } = req.body;
 
-            const sql = "UPDATE servicos SET id_profissional = ?, nome_servico = ?, descricao_servico = ?, preco_min = ?, preco_max = ?, categoria = ? WHERE id_servico = ?";
-            const result = await pool.query(sql, [id_profissional, nome_servico, descricao_servico, preco_min, preco_max, categoria, Number(paramId)]);
+            const sql = "UPDATE servicos SET id_profissional = ?, nome_servico = ?, descricao_servico = ?, preco_min = ?, categoria = ? WHERE id_servico = ?";
+            const result = await pool.query(sql, [id_profissional, nome_servico, descricao_servico, preco_min, categoria, Number(paramId)]);
             const changedRows = result[0]?.affectedRows;
 
             if (!changedRows) {

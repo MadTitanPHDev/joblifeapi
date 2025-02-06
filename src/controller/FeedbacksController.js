@@ -4,10 +4,10 @@ const { json } = require('express');
 
 const FeedbacksController = {
     async criar(req, res) {
-        const { id_servico_prestado, id_servico, id_servico_item, id_usuario, usuario_cliente, avaliacao, comentario, data_feedback } = req.body;
+        const { id_profissional, id_cliente, avaliacao, comentario, data_feedback } = req.body;
 
-        let sql = `INSERT INTO feedbacks (id_servico_prestado, id_servico, id_servico_item, id_usuario, usuario_cliente, avaliacao, comentario, data_feedback) VALUES (?,?, ?,?, ?, ?, ?)`
-        const result = await pool.query(sql, [id_servico_prestado, id_servico, id_servico_item, id_usuario, usuario_cliente, avaliacao, comentario, data_feedback])
+        let sql = `INSERT INTO feedbacks (id_profissional, id_cliente, avaliacao, comentario, data_feedback) VALUES (?, ?, ?, ?, ?)`
+        const result = await pool.query(sql, [id_profissional, id_cliente, avaliacao, comentario, data_feedback])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({message: 'error ao criar feedback'})
