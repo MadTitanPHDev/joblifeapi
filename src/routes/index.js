@@ -54,10 +54,10 @@ router.get('/favoritos', authenticateJWT,  FavoritosController.listar);
 router.delete('/favoritos/:id', authenticateJWT,  FavoritosController.deletar);
 
 router.get('/categorias', CategoriaController.listar);
-router.post('/categorias', authenticateJWT,  CategoriaController.criar);
+router.post('/categorias',  CategoriaController.criar);
 router.put('/categorias/:id', authenticateJWT,  CategoriaController.alterar);
 router.delete('/categorias/:id', authenticateJWT,  CategoriaController.deletar);
-router.get('/categorias/:id', authenticateJWT,  CategoriaController.listarCategoria)
+router.get('/categorias/:id', authenticateJWT,  CategoriaController.listarCategoria);
 
 router.get('/catalogoServicos', CatalogoServicosController.listar);
 router.delete('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.deletar);
