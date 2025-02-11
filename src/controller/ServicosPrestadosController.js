@@ -1,70 +1,123 @@
-let servicosPrestados = require('../model/ServicosPrestados');
-let pool = require('../database/mysql')
+const pool = require('../database/mysql');
 
 const ServicosPrestadosController = {
-    async criar(req, res) {
-        const {id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico} = req.body;
+    // Criar um novo serviço prestado
+    criar: async (req, res) => {
+        const { id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico } = req.body;
 
-        let sql = `INSERT INTO Servicos_prestados (id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico) VALUES(?, ?, ?, ?, ?)`
+        try {
+            const sql = `
+                INSERT INTO Servicos_prestados 
+                (id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+            const [result] = await pool.query(sql, [
+                id_servico,
+                id_servico_item,
+                id_usuario,
+                usuario_cliente,
+                descr_servico
+            ]);
 
-        const result = await pool.query(sql, [id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico])
-        const insertId = result[0]?.insertId;
-        if(!insertId){
-            return res.status(401).json({message: 'erro ao criar servico prestado'})
+            if (result.affectedRows === 0) {
+                return res.status(400).json({ message: 'Erro ao criar serviço prestado.' });
+            }
+
+            const novoServicoPrestadoId = result.insertId;
+            const [rows] = await pool.query('SELECT * FROM Servicos_prestados WHERE id_servico_prestado = ?', [novoServicoPrestadoId]);
+            return res.status(201).json(rows[0]);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
         }
-
-        const sql_select = `SELECT * FROM Servicos_prestados WHERE id_servico_pretado = ?`
-
-        const [rows] = await pool.query(sql_select, [insertId])
-        return res.status(201).json(rows[0])
-
     },
 
-    async listar(req, res) {
-        let sql = 'SELECT * FROM Servicos_prestados';
-        const [rows] = await pool.query(sql);
+    // Listar todos os serviços prestados
+    listar: async (req, res) => {
+        try {
+            const sql = 'SELECT * FROM Servicos_prestados';
+            const [rows] = await pool.query(sql);
 
-        return res.status(200).json(rows);
-    },
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Nenhum serviço prestado encontrado.' });
+            }
 
-    async listarServicoPrestado(req, res) {
-       const paramId = req.params.id;
-       const sql_select = `SELECT * FROM Servicos_prestados WHERE id_servico_pretado = ?`
-       const [rows] = await pool.query(sql_select, [Number(paramId)])
-       return res.status(201).json(rows[0])
-    },
-
-    async alterar(req, res) {
-        const paramId = req.params.id;
-        const {id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico} = req.body;
-
-        let sql = `UPDATE Servicos_prestados SET id_servico = ?, id_servico_item = ?, id_usuario = ?, usuario_cliente = ?, descr_servico = ? WHERE id_servico_pretado = ?`
-        const result = await pool.query(sql, [id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico, Number(paramId)])
-
-        const changedRows = result[0]?.changedRows;
-        if(!changedRows){
-            return res.status(401).json({message: 'erro ao alterar servico prestado'})
+            return res.status(200).json(rows);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
         }
-        const sql_select = `SELECT * FROM Servicos_prestados WHERE id_servico_pretado = ?`
-        const [rows] = await pool.query(sql_select, [paramId])
-
-        return res.status(201).json(rows[0]);
     },
 
-    async deletar(req, res){
-       const paramId = req.params.id;
+    // Listar um serviço prestado específico
+    listarServicoPrestado: async (req, res) => {
+        const { id_servico_prestado } = req.params;
 
-       let sql = `DELETE FROM Servicos_prestados WHERE id_servico_pretado = ?`
+        try {
+            const sql = 'SELECT * FROM Servicos_prestados WHERE id_servico_prestado = ?';
+            const [rows] = await pool.query(sql, [id_servico_prestado]);
 
-       const result = await pool.query(sql, [Number(paramId)])
-       const affectedRows = result[0]?.affectedRows;
-       if(!affectedRows)
-       {
-        return res.status(401).json({message: 'erro ao deletar servico prestado'})
-       }
-       return res.status(200).json({message: 'servico prestado deletada com sucesso.'})
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Serviço prestado não encontrado.' });
+            }
+
+            return res.status(200).json(rows[0]);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
+        }
+    },
+
+    // Atualizar um serviço prestado
+    alterar: async (req, res) => {
+        const { id_servico_prestado } = req.params;
+        const { id_servico, id_servico_item, id_usuario, usuario_cliente, descr_servico } = req.body;
+
+        try {
+            const sql = `
+                UPDATE Servicos_prestados 
+                SET id_servico = ?, id_servico_item = ?, id_usuario = ?, usuario_cliente = ?, descr_servico = ?
+                WHERE id_servico_prestado = ?
+            `;
+            const [result] = await pool.query(sql, [
+                id_servico,
+                id_servico_item,
+                id_usuario,
+                usuario_cliente,
+                descr_servico,
+                id_servico_prestado
+            ]);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Serviço prestado não encontrado.' });
+            }
+
+            const [rows] = await pool.query('SELECT * FROM Servicos_prestados WHERE id_servico_prestado = ?', [id_servico_prestado]);
+            return res.status(200).json(rows[0]);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
+        }
+    },
+
+    // Deletar um serviço prestado
+    deletar: async (req, res) => {
+        const { id_servico_prestado } = req.params;
+
+        try {
+            const sql = 'DELETE FROM Servicos_prestados WHERE id_servico_prestado = ?';
+            const [result] = await pool.query(sql, [id_servico_prestado]);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Serviço prestado não encontrado.' });
+            }
+
+            return res.status(200).json({ message: 'Serviço prestado deletado com sucesso.' });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
+        }
     }
-
-}
+};
 
 module.exports = ServicosPrestadosController;

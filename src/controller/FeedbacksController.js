@@ -6,20 +6,20 @@ const FeedbacksController = {
     async criar(req, res) {
         const { id_profissional, id_cliente, avaliacao, comentario, data_feedback } = req.body;
 
-        let sql = `INSERT INTO feedbacks (id_profissional, id_cliente, avaliacao, comentario, data_feedback) VALUES (?, ?, ?, ?, ?)`
+        let sql = `INSERT INTO Feedbacks (id_profissional, id_cliente, avaliacao, comentario, data_feedback) VALUES (?, ?, ?, ?, ?)`
         const result = await pool.query(sql, [id_profissional, id_cliente, avaliacao, comentario, data_feedback])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({message: 'error ao criar feedback'})
         }
 
-        const sql_select = `SELECT * FROM feedbacks WHERE id_feedback = ?`
+        const sql_select = `SELECT * FROM Feedbacks WHERE id_feedback = ?`
         const [rows] = await pool.query(sql_select, [insertId])
         return res.status(201).json(rows[0])
     },
 
     async listar(req, res) {
-        let sql = `SELECT * FROM feedbacks`;
+        let sql = `SELECT * FROM Feedbacks`;
         const [rows] = await pool.query(sql);
 
         return res.status(200).json(rows);
@@ -27,7 +27,7 @@ const FeedbacksController = {
 
     async deletar(req, res) {
         const paramId = req.params.id;
-        let sql = `DELETE FROM feedbacks WHERE id_feedback = ?`
+        let sql = `DELETE FROM Feedbacks WHERE id_feedback = ?`
         const result = await pool.query(sql, [Number(paramId)])
         const affectedRows = result[0]?.affectedRows;
         if(!affectedRows)

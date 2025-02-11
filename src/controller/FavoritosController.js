@@ -6,20 +6,20 @@ const FavoritosController = {
     async criar(req, res) {
         const { id_cliente, id_profissional } = req.body;
 
-        let sql = `INSERT INTO favoritos (id_cliente, id_profissional) VALUES (?,?)`
+        let sql = `INSERT INTO Favoritos (id_cliente, id_profissional) VALUES (?,?)`
         const result = await pool.query(sql, [id_cliente, id_profissional])
         const insertId = result[0]?.insertId;
         if (!insertId) {
             return res.status(401).json({message: 'error ao criar favorito'})
         }
 
-        const sql_select = `SELECT * FROM favoritos WHERE id_favorito = ?`
+        const sql_select = `SELECT * FROM Favoritos WHERE id_favorito = ?`
         const [rows] = await pool.query(sql_select, [insertId])
         return res.status(201).json(rows[0])
     },
 
     async listar(req, res) {
-        let sql = `SELECT * FROM favoritos`;
+        let sql = `SELECT * FROM Favoritos`;
         const [rows] = await pool.query(sql);
 
         return res.status(200).json(rows);
@@ -35,7 +35,7 @@ const FavoritosController = {
 
     async deletar(req, res) {
         const paramId = req.params.id;
-        let sql = `DELETE FROM favoritos WHERE id_favorito = ?`
+        let sql = `DELETE FROM Favoritos WHERE id_favorito = ?`
         const result = await pool.query(sql, [Number(paramId)])
         const affectedRows = result[0]?.affectedRows;
         if(!affectedRows)

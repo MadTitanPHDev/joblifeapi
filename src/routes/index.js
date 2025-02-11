@@ -12,8 +12,9 @@ const FavoritosController = require('../controller/FavoritosController');
 
 const ServicosPrestadosController = require('../controller/ServicosPrestadosController');
 const FeedbacksController = require('../controller/FeedbacksController');
-const CatalogoServicosController = require('../controller/CatalogoServicosController');
+const CatalogoServicosController = require('../controller/CatalogoServicosController')
 const CatalogoServicos_ItensController = require('../controller/CatalogoServicos_ItensController');
+const ServicosPrestadosController = require('../controller/ServicosPrestadosController');
 
 
 const storage = multer.diskStorage({
@@ -59,18 +60,24 @@ router.put('/categorias/:id', authenticateJWT,  CategoriaController.alterar);
 router.delete('/categorias/:id', authenticateJWT,  CategoriaController.deletar);
 router.get('/categorias/:id', authenticateJWT,  CategoriaController.listarCategoria);
 
+router.post('/catalogoServicos', upload.single('imagem'), CatalogoServicosController.criar )
 router.get('/catalogoServicos', CatalogoServicosController.listar);
 router.delete('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.deletar);
-router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.listarCatalogoServicos)
+router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.listarServico)
 
-router.get('/catalogoServicos', CatalogoServicos_ItensController.listar);
-router.delete('/catalogoServicos/:id', authenticateJWT,  CatalogoServicos_ItensController.deletar);
-router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicos_ItensController.listarCatalogoServicos)
+// Rotas para CatalogoServicos_Itens
+router.post('/catalogoServicosItens', upload.single('foto_servico_item'), CatalogoServicos_ItensController.criar);
+router.get('/catalogoServicosItens/:id_servico', CatalogoServicos_ItensController.listar);
+router.get('/catalogoServicosItens/item/:id_servico_item', CatalogoServicos_ItensController.listarItem);
+router.put('/catalogoServicosItens/:id_servico_item', upload.single('foto_servico_item'), CatalogoServicos_ItensController.alterar);
+router.delete('/catalogoServicosItens/:id_servico_item', CatalogoServicos_ItensController.deletar);
 
-router.post('/servicos', ServicosController.criar);
-router.get('/servicos', ServicosController.listar);
-router.put('/servicos/:id', ServicosController.alterar);
-router.delete('/servicos/:id', ServicosController.deletar);
-router.get('/servicos/:id', ServicosController.listarServicos);
+
+
+// router.post('/servicos', ServicosController.criar);
+// router.get('/servicos', ServicosController.listar);
+// router.put('/servicos/:id', ServicosController.alterar);
+// router.delete('/servicos/:id', ServicosController.deletar);
+// router.get('/servicos/:id', ServicosController.listarServicos);
 
 module.exports = router;
