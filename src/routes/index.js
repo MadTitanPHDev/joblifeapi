@@ -10,7 +10,7 @@ const ServicosController = require('../controller/ServicosController');
 const CategoriaController = require('../controller/CategoriasController');
 const FavoritosController = require('../controller/FavoritosController');
 
-const ServicosPrestadosController = require('../controller/ServicosPrestadosController');
+// const ServicosPrestadosController = require('../controller/ServicosPrestadosController');
 const FeedbacksController = require('../controller/FeedbacksController');
 const CatalogoServicosController = require('../controller/CatalogoServicosController')
 const CatalogoServicos_ItensController = require('../controller/CatalogoServicos_ItensController');
