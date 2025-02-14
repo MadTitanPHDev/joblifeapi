@@ -53,7 +53,7 @@ const UsuariosController = {
         let sql = "SELECT * FROM Usuarios WHERE id_usuario = ?";
         const [rows] = await pool.query(sql, [req.userId])
 
-        return res.status(201).json(rows);
+        return res.status(201).json(rows[0]);
     },
 
     async listarUsuario(req, res) {
@@ -91,6 +91,26 @@ const UsuariosController = {
         const sql_select = 'SELECT * FROM Usuarios WHERE id_usuario = ?'
         const [rows] = await pool.query(sql_select, [paramId])
 
+        return res.status(201).json(rows[0]);
+    },
+
+    async atualizarStatus(req, res) {
+        console.log('userId',req.userId)
+        console.log('reqbody',req.body)
+        const {  tipo_usuario,  } = req.body;
+
+        let sql = "UPDATE Usuarios SET  tipo_usuario = ? WHERE id_usuario = ?"
+        const result = await pool.query(sql, [ tipo_usuario, Number(req.userId)])
+
+        console.log(result)
+        const changedRows = result[0]?.affectedRows;
+        if (!changedRows) {
+            return res.status(401).json({ message: 'Erro ao alterar usuario.' })
+        }
+
+        const sql_select = 'SELECT * FROM Usuarios WHERE id_usuario = ?'
+        const [rows] = await pool.query(sql_select, [Number(req.userId)])
+        console.log(rows[0])
         return res.status(201).json(rows[0]);
     },
 

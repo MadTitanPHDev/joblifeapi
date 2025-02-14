@@ -34,7 +34,8 @@ const upload = multer({storage});
 router.get('/users', authenticateJWT, UsuariosController.listar);
 
 router.post('/users', upload.single('imagem'), UsuariosController.criar);
-router.put('/users/:id', authenticateJWT, upload.single('imagem'), UsuariosController.alterar);
+// router.put('/users/:id', authenticateJWT, upload.single('imagem'), UsuariosController.alterar);
+router.put('/users/atualizar-status', authenticateJWT,  UsuariosController.atualizarStatus);
 router.delete('/users/:id', authenticateJWT,  UsuariosController.deletar);
 router.get('/users/:id', authenticateJWT,  UsuariosController.listarUsuario);
 
