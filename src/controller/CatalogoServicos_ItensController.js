@@ -20,16 +20,16 @@ const CatalogoServicos_ItensController = {
     // Criar um novo item no catálogo de serviços
     criar: async (req, res) => {
         const { id_servico, id_usuario, categoria, descricao_servico_item, area_atuacao, preco_min } = req.body;
-        let foto_servico_item = '';
+        let foto_Servico_item = '';
 
         if (req.file) {
-            foto_servico_item = req.file.filename;
+            foto_Servico_item = req.file.filename;
         }
 
         try {
             const sql = `
                 INSERT INTO CatalogoServicos_Itens 
-                (id_servico, id_usuario, categoria, descricao_servico_item, foto_servico_item, area_atuacao, preco_min)
+                (id_servico, id_usuario, categoria, descricao_servico_item, foto_Servico_item, area_atuacao, preco_min)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
             const [result] = await pool.query(sql, [
@@ -37,7 +37,7 @@ const CatalogoServicos_ItensController = {
                 id_usuario,
                 categoria,
                 descricao_servico_item,
-                foto_servico_item,
+                foto_Servico_item,
                 area_atuacao,
                 preco_min
             ]);
@@ -97,17 +97,17 @@ const CatalogoServicos_ItensController = {
     alterar: async (req, res) => {
         const { id_servico_item } = req.params;
         const { id_servico, id_usuario, categoria, descricao_servico_item, area_atuacao, preco_min } = req.body;
-        let foto_servico_item = '';
+        let foto_Servico_item = '';
 
         if (req.file) {
-            foto_servico_item = req.file.filename;
+            foto_Servico_item = req.file.filename;
         }
 
         try {
             const sql = `
                 UPDATE CatalogoServicos_Itens 
                 SET id_servico = ?, id_usuario = ?, categoria = ?, descricao_servico_item = ?, 
-                    foto_servico_item = ?, area_atuacao = ?, preco_min = ?
+                    foto_Servico_item = ?, area_atuacao = ?, preco_min = ?
                 WHERE id_servico_item = ?
             `;
             const [result] = await pool.query(sql, [
@@ -115,7 +115,7 @@ const CatalogoServicos_ItensController = {
                 id_usuario,
                 categoria,
                 descricao_servico_item,
-                foto_servico_item,
+                foto_Servico_item,
                 area_atuacao,
                 preco_min,
                 id_servico_item

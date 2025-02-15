@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
 
+// Alterações: Controllers Feedbacks (nomes das colunas), Favoritos (nomes das colunas), CatalogoServicos_Itens (coluna foto_Servico_item estava com s minusculo), 
+               // CatalogoServicos (colunas foto_Servico e descricao_Servico estavam com s minusculo).
+
+// Testes no Thunder: no método POST, Usuarios, CatalogoServicos, CatalogoServicos_itens, Servicos_prestados, Feedbacks, Categorias. 
+
 const generateToken = (user) => {
     const payload = {
         id_usuario: user.id_usuario

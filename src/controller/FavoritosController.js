@@ -4,9 +4,9 @@ const { json } = require('express');
 
 const FavoritosController = {
     async criar(req, res) {
-        const { id_cliente, id_profissional } = req.body;
+        const { id_usuario } = req.body;
 
-        let sql = `INSERT INTO Favoritos (id_cliente, id_profissional) VALUES (?,?)`
+        let sql = `INSERT INTO Favoritos (id_usuario) VALUES (?)`
         const result = await pool.query(sql, [id_cliente, id_profissional])
         const insertId = result[0]?.insertId;
         if (!insertId) {
