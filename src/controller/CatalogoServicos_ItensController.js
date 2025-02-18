@@ -150,7 +150,49 @@ const CatalogoServicos_ItensController = {
             console.error(error);
             return res.status(500).json({ message: 'Erro no servidor.', error });
         }
-    }
+    },
+
+    // listarItem2: async (req, res) => {
+
+    //     try {
+    //         const sql = 'Select CatalogoServicos_Itens.*, Usuarios.nome, Usuarios.telefone FROM CatalogoServicos_Itens, Usuarios WHERE CatalogoServicos_Itens.categoria = 1 AND CatalogoServicos_Itens.id_usuario = Usuarios.id_usuario;'
+    //         const [result] = await pool.query(sql, [req.params.categoria]);
+
+    //         if (result.length === 0) {
+    //             return res.status(404).json({ message: 'Item não encontrado.' });
+    //             const [rows] = await pool.query(sql, [categoria]);
+         
+    //         }
+    //         return res.status(200).json(rows[0]);
+    //     } catch (error) {
+    //         console.error(error);
+    //         return res.status(500).json({ message: 'Erro no servidor.', error });
+    //     }
+    // },
+
+    listarItem2: async (req, res) => {
+        const { categoria } = req.params; // Extrai o parâmetro da rota
+
+        try {
+            const sql = `
+                SELECT CatalogoServicos_Itens.*, Usuarios.nome, Usuarios.telefone 
+                FROM CatalogoServicos_Itens
+                INNER JOIN Usuarios ON CatalogoServicos_Itens.id_usuario = Usuarios.id_usuario
+                WHERE CatalogoServicos_Itens.categoria = ?;
+            `;
+            const [rows] = await pool.query(sql, [categoria]);
+
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Nenhum item encontrado para esta categoria.' });
+            }
+
+            return res.status(200).json(rows); // Retorna todos os itens encontrados
+        } catch (error) {
+            console.error('Erro no servidor:', error);
+            return res.status(500).json({ message: 'Erro no servidor.', error });
+        }
+    },
+
 };
 
 module.exports = CatalogoServicos_ItensController;

@@ -62,16 +62,19 @@ router.delete('/categorias/:id', authenticateJWT,  CategoriaController.deletar);
 router.get('/categorias/:id', authenticateJWT,  CategoriaController.listarCategoria);
 
 router.post('/catalogoServicos', upload.single('imagem'), CatalogoServicosController.criar )
-router.get('/catalogoServicos', CatalogoServicosController.listar);
+// router.get('/catalogoServicos', CatalogoServicosController.listar);
+router.get('/catalogoServicos', CatalogoServicosController.listarTodos);
 router.delete('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.deletar);
 router.get('/catalogoServicos/:id', authenticateJWT,  CatalogoServicosController.listarServico)
 
 // Rotas para CatalogoServicos_Itens
 router.post('/catalogoServicosItens', upload.single('foto_servico_item'), CatalogoServicos_ItensController.criar);
-router.get('/catalogoServicosItens/:id_servico', CatalogoServicos_ItensController.listar);
-router.get('/catalogoServicosItens/item/:id_servico_item', CatalogoServicos_ItensController.listarItem);
+// router.get('/catalogoServicosItens/:id_servico', CatalogoServicos_ItensController.listar);
+// router.get('/catalogoServicosItens/item/:id_servico_item', CatalogoServicos_ItensController.listarItem);
 router.put('/catalogoServicosItens/:id_servico_item', upload.single('foto_servico_item'), CatalogoServicos_ItensController.alterar);
 router.delete('/catalogoServicosItens/:id_servico_item', CatalogoServicos_ItensController.deletar);
+
+router.get('/catalogoServicosItens/:categoria', CatalogoServicos_ItensController.listarItem2);
 
 
 

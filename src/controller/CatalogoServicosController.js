@@ -37,6 +37,18 @@ const CatalogoServicosController = {
         return res.status(201).json(rows);
     },
 
+    async listarTodos(req, res) {
+        try {
+            const sql = "SELECT * FROM CatalogoServicos";
+            const [rows] = await pool.query(sql);
+
+            return res.status(200).json(rows);
+        } catch (error) {
+            console.error('Erro no servidor:', error);
+            return res.status(500).json({ message: 'Erro no servidor.' });
+        }
+    },
+
     async alterar(req, res) {
         const paramId = req.params.id;
         const { nome_servico, descricao_Servico } = req.body;
